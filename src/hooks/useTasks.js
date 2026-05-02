@@ -11,13 +11,18 @@ export function useTasks() {
     const newTask = {
       description,
       priority: "High",
-      id: Math.random,
+      id: Math.random(),
     };
     setTasks((prevTasks) => [...prevTasks, newTask]);
+  }
+
+  function deleteTask(id) {
+    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
   }
 
   return {
     tasks,
     addTask,
+    deleteTask,
   };
 }

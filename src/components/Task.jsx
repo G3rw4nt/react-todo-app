@@ -1,6 +1,7 @@
 import { useState } from "react";
 
-export function Task({ taskDecription, priority }) {
+export function Task({ task, onDeleteTask }) {
+  const { id, description } = task;
   const [isTaskFinished, setIsTaskFinished] = useState(false);
   const buttonColorClasses = isTaskFinished
     ? "bg-orange-500 hover:bg-orange-700"
@@ -9,7 +10,7 @@ export function Task({ taskDecription, priority }) {
   return (
     <div className="border rounded-xl my-4 hover:bg-gray-200 transition flex justify-between items-center p-4">
       <span className={isTaskFinished ? "line-through" : ""}>
-        {taskDecription}
+        {description}
       </span>
       <div className="flex gap-2 ">
         <button
@@ -22,6 +23,7 @@ export function Task({ taskDecription, priority }) {
         <button
           type="button"
           className="bg-red-500 rounded-xl p-2 hover:bg-red-700 transition"
+          onClick={() => onDeleteTask(id)}
         >
           Usuń
         </button>
