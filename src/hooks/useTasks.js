@@ -1,10 +1,16 @@
 import { useState } from "react";
+import { getPriorityOption } from "../constants/priorities";
 
-const priorityOrder = {
-  High: 1,
-  Normal: 2,
-  Low: 3,
-};
+function sortTasks(a, b) {
+  const priorityDifference =
+    getPriorityOption(a.priority).order - getPriorityOption(b.priority).order;
+
+  if (priorityDifference !== 0) {
+    return priorityDifference;
+  }
+
+  return a.description.localeCompare(b.description, "pl");
+}
 
 export function useTasks() {
   const [tasks, setTasks] = useState([]);
@@ -14,6 +20,7 @@ export function useTasks() {
       id: crypto.randomUUID(),
       description,
       priority,
+      isFinished: false,
     };
 
     setTasks((prevTasks) => [...prevTasks, newTask]);
@@ -23,20 +30,18 @@ export function useTasks() {
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
   }
 
-  const sortedTasks = [...tasks].sort((a, b) => {
-    const priorityDifference =
-      priorityOrder[a.priority] - priorityOrder[b.priority];
-
-    if (priorityDifference !== 0) {
-      return priorityDifference;
-    }
-
-    return a.description.localeCompare(b.description, "pl");
-  });
+  function toggleTaskFinished(id) {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === id ? { ...task, isFinished: !task.isFinished } : task
+      )
+    );
+  }
 
   return {
-    tasks: sortedTasks,
+    tasks: [...tasks].sort(sortTasks),
     addTask,
     deleteTask,
+    toggleTaskFinished,
   };
 }

@@ -1,27 +1,9 @@
 import { useState } from "react";
-
-const priorities = [
-  {
-    value: "High",
-    label: "Wysoki",
-    className: "peer-checked:bg-red-500 peer-checked:border-red-500",
-  },
-  {
-    value: "Normal",
-    label: "Normalny",
-    className:
-      "peer-checked:bg-yellow-400 peer-checked:border-yellow-400 peer-checked:text-slate-900",
-  },
-  {
-    value: "Low",
-    label: "Niski",
-    className: "peer-checked:bg-green-500 peer-checked:border-green-500",
-  },
-];
+import { PRIORITIES, priorityOptions } from "../constants/priorities";
 
 export function NewTaskForm({ isFormShown, onAddTask }) {
   const [description, setDescription] = useState("");
-  const [priority, setPriority] = useState("Normal");
+  const [priority, setPriority] = useState(PRIORITIES.NORMAL);
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -31,7 +13,7 @@ export function NewTaskForm({ isFormShown, onAddTask }) {
 
     onAddTask(trimmedDescription, priority);
     setDescription("");
-    setPriority("Normal");
+    setPriority(PRIORITIES.NORMAL);
   }
 
   return (
@@ -55,7 +37,7 @@ export function NewTaskForm({ isFormShown, onAddTask }) {
         </div>
 
         <div className="grid min-h-11 grid-cols-3 overflow-hidden rounded-xl border border-slate-200">
-          {priorities.map((option) => (
+          {priorityOptions.map((option) => (
             <label key={option.value} className="min-w-0 cursor-pointer">
               <input
                 type="radio"
@@ -67,7 +49,7 @@ export function NewTaskForm({ isFormShown, onAddTask }) {
               />
 
               <span
-                className={`flex h-full min-h-11 items-center justify-center border-r border-slate-200 px-2 text-center text-sm font-medium leading-none text-slate-600 transition last:border-r-0 peer-checked:text-white ${option.className}`}
+                className={`flex h-full min-h-11 items-center justify-center border-r border-slate-200 px-2 text-center text-sm font-medium leading-none text-slate-600 transition last:border-r-0 peer-checked:text-white ${option.formClassName}`}
               >
                 {option.label}
               </span>

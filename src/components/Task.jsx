@@ -1,40 +1,22 @@
-import { useState } from "react";
+import { getPriorityOption } from "../constants/priorities";
 
-const priorityDetails = {
-  High: {
-    label: "Wysoki",
-    className: "bg-red-100 text-red-700",
-  },
-  Normal: {
-    label: "Normalny",
-    className: "bg-yellow-100 text-yellow-800",
-  },
-  Low: {
-    label: "Niski",
-    className: "bg-green-100 text-green-700",
-  },
-};
-
-export function Task({ task, onDeleteTask }) {
-  const { id, description, priority } = task;
-  const [isTaskFinished, setIsTaskFinished] = useState(false);
-  const buttonColorClasses = isTaskFinished
+export function Task({ task, onDeleteTask, onToggleTaskFinished }) {
+  const { id, description, priority, isFinished } = task;
+  const priorityInfo = getPriorityOption(priority);
+  const buttonColorClasses = isFinished
     ? "bg-orange-500 hover:bg-orange-700"
     : "bg-green-500 hover:bg-green-700";
-  const priorityInfo = priorityDetails[priority];
 
   return (
     <div className="my-4 flex items-center justify-between gap-4 rounded-xl border p-4 transition hover:bg-gray-200">
       <div className="min-w-0">
         <span
-          className={`block break-words ${
-            isTaskFinished ? "line-through" : ""
-          }`}
+          className={`block break-words ${isFinished ? "line-through" : ""}`}
         >
           {description}
         </span>
         <span
-          className={`mt-2 inline-flex h-6 items-center rounded-full px-2 text-xs font-medium ${priorityInfo.className}`}
+          className={`mt-2 inline-flex h-6 items-center rounded-full px-2 text-xs font-medium ${priorityInfo.badgeClassName}`}
         >
           {priorityInfo.label}
         </span>
@@ -44,9 +26,9 @@ export function Task({ task, onDeleteTask }) {
         <button
           type="button"
           className={`${buttonColorClasses} rounded-xl p-2 transition`}
-          onClick={() => setIsTaskFinished((prev) => !prev)}
+          onClick={() => onToggleTaskFinished(id)}
         >
-          {isTaskFinished ? "Do zrobienia" : "Zrobione"}
+          {isFinished ? "Do zrobienia" : "Zrobione"}
         </button>
         <button
           type="button"

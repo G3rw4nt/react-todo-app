@@ -5,7 +5,7 @@ import { TaskList } from "./components/TaskList";
 import { useTasks } from "./hooks/useTasks";
 function App() {
   const [isFormShown, setIsFormShown] = useState(false);
-  const { tasks, addTask, deleteTask } = useTasks();
+  const { tasks, addTask, deleteTask, toggleTaskFinished } = useTasks();
 
   return (
     <main className="min-h-screen bg-sky-500 px-4 py-10 font-sans">
@@ -18,7 +18,11 @@ function App() {
           />
           <NewTaskForm isFormShown={isFormShown} onAddTask={addTask} />
         </div>
-        <TaskList tasks={tasks} onDeleteTask={deleteTask} />
+        <TaskList
+          tasks={tasks}
+          onDeleteTask={deleteTask}
+          onToggleTaskFinished={toggleTaskFinished}
+        />
       </div>
     </main>
   );
