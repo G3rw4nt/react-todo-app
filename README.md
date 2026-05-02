@@ -1,16 +1,146 @@
-# React + Vite
+# React Todo App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A focused task management app built with React, Vite and Tailwind CSS. The project is intentionally small, but it demonstrates clean component composition, state management with a custom hook, derived sorting logic and accessible form controls.
 
-Currently, two official plugins are available:
+Live demo: https://gerwant-react-todo-app.netlify.app/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- Add new tasks through a controlled React form.
+- Select task priority with a segmented radio control:
+  - high priority
+  - normal priority
+  - low priority
+- Automatically sort tasks by priority, then alphabetically by task description.
+- Mark tasks as completed or move them back to active.
+- Delete tasks from the list.
+- Display a clear empty state when there are no tasks.
+- Show a task counter with correct Polish word forms.
+- Keep priority configuration in one shared constants file.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech Stack
 
-## Expanding the ESLint configuration
+- React 19
+- Vite 8
+- Tailwind CSS 4
+- ESLint 9
+- JavaScript ES modules
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Project Structure
+
+```txt
+src/
+  components/
+    Header.jsx
+    NewTaskForm.jsx
+    Task.jsx
+    TaskList.jsx
+  constants/
+    priorities.js
+  hooks/
+    useTasks.js
+  utils/
+    getTaskWord.js
+  App.jsx
+  main.jsx
+```
+
+## Architecture Notes
+
+The app keeps task-related logic inside a custom hook:
+
+```txt
+useTasks
+  -> stores tasks
+  -> adds tasks
+  -> deletes tasks
+  -> toggles completion
+  -> returns a sorted task list
+```
+
+`App.jsx` stays responsible for composing the screen, while the hook owns task behavior. Priority metadata is centralized in `src/constants/priorities.js`, so labels, sorting order and visual styles are defined in one place instead of being duplicated across components.
+
+## Getting Started
+
+### 1. Clone the repository
+
+```bash
+git clone <repository-url>
+cd react-todo-app
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Start the development server
+
+```bash
+npm run dev
+```
+
+Vite will print a local URL, usually:
+
+```txt
+http://localhost:5173
+```
+
+Open it in your browser.
+
+## Available Scripts
+
+```bash
+npm run dev
+```
+
+Starts the local development server.
+
+```bash
+npm run build
+```
+
+Creates a production build.
+
+```bash
+npm run preview
+```
+
+Serves the production build locally.
+
+```bash
+npm run lint
+```
+
+Runs ESLint checks for the project.
+
+## Implementation Details
+
+### Task Model
+
+Each task contains:
+
+```js
+{
+  id: "generated-id",
+  description: "Task description",
+  priority: "High | Normal | Low",
+  isFinished: false
+}
+```
+
+### Sorting
+
+Tasks are sorted in `useTasks.js`:
+
+1. By priority order: `High`, `Normal`, `Low`.
+2. Alphabetically by description for tasks with the same priority.
+
+### Priority Control
+
+The priority selector is implemented as a real radio group, visually styled as a segmented control. This keeps the form state predictable while still providing a compact, polished interface.
+
+## Current Scope
+
+This version stores tasks in local React state only. Refreshing the browser resets the list. A natural next improvement would be adding persistence through `localStorage` or a backend API.
