@@ -2,14 +2,10 @@ import { useState } from "react";
 import { Header } from "./components/Header";
 import { NewTaskForm } from "./components/NewTaskForm";
 import { TaskList } from "./components/TaskList";
+import { useTasks } from "./hooks/useTasks";
 function App() {
   const [isFormShown, setIsFormShown] = useState(false);
-  const initialTasks = [
-    { description: "Wynieść Śmieci", priority: "High" },
-    { description: "Robić kurs", priority: "High" },
-    { description: "Pójść po mleko", priority: "High" },
-  ];
-  const [tasks, setTasks] = useState(initialTasks);
+  const { tasks, addTask } = useTasks();
 
   return (
     <main className="min-h-screen bg-sky-500 px-4 py-10 font-sans">
@@ -20,7 +16,7 @@ function App() {
             isFormShown={isFormShown}
             numberOfTasks={tasks.length}
           />
-          <NewTaskForm isFormShown={isFormShown} />
+          <NewTaskForm isFormShown={isFormShown} onAddTask={addTask} />
         </div>
         <TaskList tasks={tasks} />
       </div>
