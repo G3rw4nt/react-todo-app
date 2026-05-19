@@ -1,7 +1,9 @@
 import { getPriorityOption } from "../constants/priorities";
-
-export function Task({ task, onDeleteTask, onToggleTaskFinished }) {
+import { useTaskStore } from "../hooks/useTaskStore";
+export function Task({ task }) {
   const { id, description, priority, isFinished } = task;
+  const deleteTask = useTaskStore((state) => state.deleteTask);
+  const toggleTaskFinished = useTaskStore((state) => state.toggleTaskFinished);
   const priorityInfo = getPriorityOption(priority);
   const buttonColorClasses = isFinished
     ? "bg-orange-500 hover:bg-orange-700"
@@ -26,14 +28,14 @@ export function Task({ task, onDeleteTask, onToggleTaskFinished }) {
         <button
           type="button"
           className={`${buttonColorClasses} rounded-xl p-2 transition`}
-          onClick={() => onToggleTaskFinished(id)}
+          onClick={() => toggleTaskFinished(id)}
         >
           {isFinished ? "Do zrobienia" : "Zrobione"}
         </button>
         <button
           type="button"
           className="rounded-xl bg-red-500 p-2 transition hover:bg-red-700"
-          onClick={() => onDeleteTask(id)}
+          onClick={() => deleteTask(id)}
         >
           Usuń
         </button>

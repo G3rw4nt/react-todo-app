@@ -2,10 +2,10 @@ import { useState } from "react";
 import { Header } from "./components/Header";
 import { NewTaskForm } from "./components/NewTaskForm";
 import { TaskList } from "./components/TaskList";
-import { useTasks } from "./hooks/useTasks";
+import { useTaskStore } from "./hooks/useTaskStore";
 function App() {
   const [isFormShown, setIsFormShown] = useState(false);
-  const { tasks, addTask, deleteTask, toggleTaskFinished } = useTasks();
+  const numberOfTasks = useTaskStore((state) => state.tasks.length);
 
   return (
     <main className="min-h-screen bg-sky-500 px-4 py-10 font-sans">
@@ -14,15 +14,11 @@ function App() {
           <Header
             onToggleForm={() => setIsFormShown((prev) => !prev)}
             isFormShown={isFormShown}
-            numberOfTasks={tasks.length}
+            numberOfTasks={numberOfTasks}
           />
-          <NewTaskForm isFormShown={isFormShown} onAddTask={addTask} />
+          <NewTaskForm isFormShown={isFormShown} />
         </div>
-        <TaskList
-          tasks={tasks}
-          onDeleteTask={deleteTask}
-          onToggleTaskFinished={toggleTaskFinished}
-        />
+        <TaskList />
       </div>
     </main>
   );

@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { PRIORITIES, priorityOptions } from "../constants/priorities";
+import { useTaskStore } from "../hooks/useTaskStore";
 
-export function NewTaskForm({ isFormShown, onAddTask }) {
+export function NewTaskForm({ isFormShown }) {
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState(PRIORITIES.NORMAL);
+  const addTask = useTaskStore((state) => state.addTask);
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -11,7 +13,7 @@ export function NewTaskForm({ isFormShown, onAddTask }) {
     const trimmedDescription = description.trim();
     if (!trimmedDescription) return;
 
-    onAddTask(trimmedDescription, priority);
+    addTask(trimmedDescription, priority);
     setDescription("");
     setPriority(PRIORITIES.NORMAL);
   }

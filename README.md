@@ -1,6 +1,6 @@
 # React Todo App
 
-A focused task management app built with React, Vite and Tailwind CSS. The project is intentionally small, but it demonstrates clean component composition, state management with a custom hook, derived sorting logic and accessible form controls.
+A focused task management app built with React, Vite, Tailwind CSS and Zustand. The project is intentionally small, but it demonstrates clean component composition, global state management, persisted tasks, derived sorting logic and accessible form controls.
 
 Live demo: https://gerwant-react-todo-app.netlify.app/
 
@@ -14,6 +14,7 @@ Live demo: https://gerwant-react-todo-app.netlify.app/
 - Automatically sort tasks by priority, then alphabetically by task description.
 - Mark tasks as completed or move them back to active.
 - Delete tasks from the list.
+- Persist tasks in `localStorage` with Zustand middleware.
 - Display a clear empty state when there are no tasks.
 - Show a task counter with correct Polish word forms.
 - Keep priority configuration in one shared constants file.
@@ -21,6 +22,7 @@ Live demo: https://gerwant-react-todo-app.netlify.app/
 ## Tech Stack
 
 - React 19
+- Zustand 5
 - Vite 8
 - Tailwind CSS 4
 - ESLint 9
@@ -38,7 +40,7 @@ src/
   constants/
     priorities.js
   hooks/
-    useTasks.js
+    useTaskStore.js
   utils/
     getTaskWord.js
   App.jsx
@@ -47,18 +49,24 @@ src/
 
 ## Architecture Notes
 
-The app keeps task-related logic inside a custom hook:
+The app keeps task-related state and actions inside a Zustand store:
 
 ```txt
-useTasks
+useTaskStore
   -> stores tasks
   -> adds tasks
   -> deletes tasks
   -> toggles completion
-  -> returns a sorted task list
+  -> persists tasks in localStorage
 ```
 
-`App.jsx` stays responsible for composing the screen, while the hook owns task behavior. Priority metadata is centralized in `src/constants/priorities.js`, so labels, sorting order and visual styles are defined in one place instead of being duplicated across components.
+`App.jsx` stays responsible for composing the screen, while components read only the store values or actions they need. The task list derives its sorted view from the stored tasks, keeping the persisted data simple. Priority metadata is centralized in `src/constants/priorities.js`, so labels, sorting order and visual styles are defined in one place instead of being duplicated across components.
+
+Zustand persistence is configured with the `persist` middleware:
+
+```txt
+localStorage key: todo-tasks
+```
 
 ## Getting Started
 
@@ -132,10 +140,12 @@ Each task contains:
 
 ### Sorting
 
-Tasks are sorted in `useTasks.js`:
+Tasks are sorted with the shared `sortTasks` helper from `useTaskStore.js`:
 
 1. By priority order: `High`, `Normal`, `Low`.
 2. Alphabetically by description for tasks with the same priority.
+
+The sorted list is derived in the UI instead of being stored separately.
 
 ### Priority Control
 
@@ -143,4 +153,4 @@ The priority selector is implemented as a real radio group, visually styled as a
 
 ## Current Scope
 
-This version stores tasks in local React state only. Refreshing the browser resets the list. A natural next improvement would be adding persistence through `localStorage` or a backend API.
+This version stores tasks in Zustand and persists them to `localStorage`, so refreshing the browser keeps the task list. Natural next improvements would be editing tasks, filtering by completion status, clearing completed tasks or syncing data with a backend API.
